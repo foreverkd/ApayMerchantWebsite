@@ -103,6 +103,27 @@
             </div>
             <div class="text-center" style="margin-top:40px;" id="AmazonPayButton"></div>
 
+            <div id="AmazonPayButton"></div>
+            <script src="https://static-na.payments-amazon.com/checkout.js"></script>
+            <script type="text/javascript" charset="utf-8">
+                amazon.Pay.renderButton('#AmazonPayButton', {
+                    // set checkout environment
+                    merchantId: 'A2Y3FXLHM8H7PR',
+                    publicKeyId: 'SANDBOX-AHQPTIXXJWXUV2PEQZF4RT2E',
+                    ledgerCurrency: 'USD',
+                    // customize the buyer experience
+                    checkoutLanguage: 'en_US',
+                    productType: 'PayAndShip',
+                    placement: 'Cart',
+                    buttonColor: 'Gold',
+                    // configure Create Checkout Session request
+                    createCheckoutSessionConfig: {
+                        payloadJSON: '{\"storeId\":\"amzn1.application-oa2-client.456a4c3b15d24aae96256d2f82afdd73\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"http://localhost:8080/ApayMerchantWebsite_war_exploded/Widgets.jsp\",\"checkoutResultReturnUrl\":\"http://localhost:8080/ApayMerchantWebsite_war_exploded/index.jsp\"}}', // string generated in step 2
+                        signature: 'P76bdWbMmA+ysDfkgojBXUL3Np9HjMYlhjz+/xdh/rcqzbrW8ZsUZIAzqQf3rg4R4OkA7vh2ygNOh8zBI23axKo12UMG/uJbcNJxfHcTHYbzXHkKslPsYEpAWhfJlZRGAtEcQ9DC74F29PvraUYuM1gEvA5waBuzUP+kwxAwdOla1JOhMCeniygfXhh72kDZkr8B59eCQJDcMiEtS9+5EC6I4+9RPBY+JIp+8PLDGynIhbLpieGgiVYiiKfxGnkLbuxxFTxxnkAUBe5F4QRBXl7dUY0MsmQPWc0LDWHeZoMYsp+jupNBqZlM/38OrYUqAY5MgZYAV3KNt8A01hNwRg==' // signature generated in step 3
+                    }
+                });
+            </script>
+
             <script type="text/javascript">
             window.onAmazonLoginReady = function() {
                 amazon.Login.setClientId('amzn1.application-oa2-client.456a4c3b15d24aae96256d2f82afdd73');

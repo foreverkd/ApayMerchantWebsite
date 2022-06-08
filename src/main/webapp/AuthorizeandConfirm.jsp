@@ -91,12 +91,16 @@
         <%@ page import="com.amazon.pay.types.CurrencyCode" %>
         <%@ page import="com.amazon.pay.response.parser.*" %>
         <%@ page import="com.amazon.pay.request.*" %>
+    <%@ page import="com.amazon.pay.exceptions.AmazonClientException" %>
+    <%@ page import="com.amazon.pay.types.Environment" %>
+    <%@ page import="com.amazon.pay.impl.PayConfiguration" %>
 
-        <body>
+    <body>
 <%
 
 String consentToken = request.getParameter("consent_token");
 String orderReferenceId = request.getParameter("oro_id");
+String checkoutSessionId = request.getParameter("checkout_session_id");
 String amount = "1.29";
 
 Config configkey = new PayConfig()
@@ -106,6 +110,51 @@ Config configkey = new PayConfig()
       .withSandboxMode(true)
       .withRegion(Region.US)
       .withCurrencyCode(CurrencyCode.USD);
+
+    PayConfiguration payConfiguration = null;
+    try {
+        payConfiguration = new PayConfiguration()
+                .setPublicKeyId("SANDBOX-AHQPTIXXJWXUV2PEQZF4RT2E")
+                .setRegion(Region.NA)
+                .setPrivateKey("-----BEGIN PRIVATE KEY-----\n" +
+                        "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCdgodoqgluYJGO\n" +
+                        "cKtav21H5qkJ9w+kPN99dVoKjxf9BS2HvwTRZ8EhY7ypiEY5QqF/cE9C9ZrYy+eS\n" +
+                        "o4gYK/2UgNx5Bo+Df+ofJs4k7g30ym22AjwM/uTfPYIdAv8lPoMuINYAgv7mr4ZN\n" +
+                        "wXjwp8YDu/nR4AnuewZS6NI8V8v6a/9kwIJcvt2GL5FeYWahTYx7VfrZcTdrcVKc\n" +
+                        "Fpvctgnd3UuiyFIJQd72zYQsz+fbrJdZDquhb2oJzDBoMnbV58/Eql/WEGcCvGMk\n" +
+                        "OMkp3wSjG3DpGldnEfe14209Tyv66NB95Xn/L53dDVThmBUKte2QL9vZAqyScC4t\n" +
+                        "EjpfXNVnAgMBAAECggEAMba6IGnSsjjemDOtkeXriw8deVy2XiMscv+wHLcPXjfd\n" +
+                        "KAQ9dA6oYW6GZIfzii0ipgN/sOWuKxEolRryYJa54b5OWBCfCWU9MvnfhL5yPzoJ\n" +
+                        "KLJJ29wzxtY2FAwXFd1GMDAC+4RdCdiKrk4LawG5OQKCliB9Yf0IgPClMpCPfAlN\n" +
+                        "eR4H2uY8WiJYBvOgb23mJXVpn08AyOahAPc4d/gIds2KyclW97OsR6GIIu4cxW5U\n" +
+                        "TpUt8/H0uRBefg1DO94OuJj8CN80kAFUbyE8w0mvWNlmYVBXiDSed7LT741YyDdB\n" +
+                        "xQCkVpqyHrQZK3S/Tfx2yS4lXW2Mwl3p7mRUNPR6oQKBgQDMxt5XweeYDNfOeO6S\n" +
+                        "LsFXhNIzdMnnbyHNWgvI4IqnsgGJNAVhVjvbLFkv0x0I6hkzD60igTfhY6s62ftq\n" +
+                        "SSA2e4OH5euBJzHoJcn+KW341bI4OcxG/guhepmvh+Bp8lCpC3HVQbVmaGMiCnBt\n" +
+                        "Cc7jH0//ELgcPIkEt1kMJ01NsQKBgQDE6N03YLvhQo64voR/iMI4tV9RXZdocSX/\n" +
+                        "9bdK2GvIj5wgZoR0zS2+DDLc2m6YdHbeN52A8ZW4W88b6pGTqIxPVJDvpwkSLIG/\n" +
+                        "9dXf/1v8iTjEHh/HghWjRN0O+l03g1pC5ON7dnZ7gc46H4TjdjGfQXmK1UAHh+5p\n" +
+                        "IZZYw7qilwKBgDqseKS4gH1GoMceS21DTE6hVgE8Y2WWqB7IwDusas4l6N7BMxFy\n" +
+                        "ve/Mwzk6ykT1nobM5RTP5Y0FG9jfAHSxwzMZLNTRgisdaeVUfo3+nO4BfPEzTl7B\n" +
+                        "B+Aa2tI6ooh4z7e/+bva+fj/y/fC+fekKc1V+Xvh9H7SsYfSaQdcc3/hAoGBALJF\n" +
+                        "uXJXrAHnRlvQcRkd8elxm9iIiXnPZv3zsnyasAqmqk1TQ3yT/mPfm3UEdbilSLEr\n" +
+                        "XPfOwSRmSn4VwrMSl+WCxK2UZswDa30lzvq7sMZUXgaA13jDN1/YCuNynE6UJ3YE\n" +
+                        "0EeJGv/6p4FL4/4jlg1/M9ET/KJU2O5psDqxChoFAoGATQ0D/BIIGIwj1hG/e7ug\n" +
+                        "HFD0bZ6FBOIRWtbTZqTrOZ83NzlDk5leZ0UX9uW3xLu3im84jE1Ttk2PIS4moTaj\n" +
+                        "A36hZHrsWe9lm3BwhyVEDiLqs/OanNUwU6K4dfvqX66JT3Ulpdaop31deB69D2tL\n" +
+                        "Gbyx2i0TR0fSdQI2ml0fOlI=\n" +
+                        "-----END PRIVATE KEY-----")
+                .setEnvironment(Environment.SANDBOX);
+    } catch (AmazonClientException e) {
+        e.printStackTrace();
+    }
+
+    PayClient payClient = new PayClient(payConfiguration);
+
+    String payload = "{\"storeId\":\"amzn1.application-oa2-client.456a4c3b15d24aae96256d2f82afdd73\",\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"http://localhost:8080/ApayMerchantWebsite_war_exploded/Widgets.jsp\",\"checkoutResultReturnUrl\":\"http://localhost:8080/ApayMerchantWebsite_war_exploded/index.jsp\"}}";
+    String signature = payClient.generateButtonSignature(payload);
+
+    System.out.println("<p>Calling generate button signature </p> "+signature);
 %>
 <div class="container">
 
@@ -137,7 +186,8 @@ an email.</p>
 
         </div>
         <%
-        System.out.println("<pre><div id='wordwrap'><b>Order Reference ID</b> = <i>" + orderReferenceId + "</i><br /><b>Consent Token</b> = <i>" + consentToken + "</i></div></n></pre>");
+        System.out.println("<pre><div id='wordwrap'><b>Order Reference ID</b> = <i>" + orderReferenceId + "</i><br /><b>Consent Token</b> = <i>" + consentToken + "</i>" +
+                "<br /><b>Checkout Session Id </b> = <i>" + checkoutSessionId + "</div></n></pre>");
             System.out.println("</n>");
         %>
     </div>
@@ -150,17 +200,19 @@ try {
 
     System.out.println("<p>Making a GetOrderReferenceDetails API Call. Usually you call GetOrderReferenceDetails before calling a SetOrderReferenceDetails to check Order details and also get a Zipcode/shipping_address to calculate shipping tax.</p>");
 
-            final GetOrderReferenceDetailsRequest getOrderReferenceDetailsRequest  = new GetOrderReferenceDetailsRequest(orderReferenceId);
-            getOrderReferenceDetailsRequest.setAccessToken(consentToken);
-            final GetOrderReferenceDetailsResponseData responsOrderRef = client.getOrderReferenceDetails(getOrderReferenceDetailsRequest);
-    System.out.println("<pre id='confirm'>" + responsOrderRef.toXML().replace("<", "&lt;").replace(">", "&gt;") + "</pre>");
+            final GetOrderReferenceDetailsRequest getOrderReferenceDetailsRequest  = new GetOrderReferenceDetailsRequest(checkoutSessionId);
+//            getOrderReferenceDetailsRequest.setAccessToken(consentToken);
+            final GetOrderReferenceDetailsResponseData responsOrderRef = payClient.getOrderReferenceDetails(getOrderReferenceDetailsRequest);
+    System.out.println("<pre id='get'>" + responsOrderRef.toXML().replace("<", "&lt;").replace(">", "&gt;") + "</pre>");
 
 
-            SetOrderReferenceDetailsRequest setOrderReferenceDetailsRequest = new SetOrderReferenceDetailsRequest(orderReferenceId, amount);
+            SetOrderReferenceDetailsRequest setOrderReferenceDetailsRequest = new SetOrderReferenceDetailsRequest(checkoutSessionId, amount);
             setOrderReferenceDetailsRequest.setCustomInformation("Java SDK OneTime Checkout Sample");
             setOrderReferenceDetailsRequest.setStoreName("Java Cosmos Store");
             setOrderReferenceDetailsRequest.setSellerNote("1st Amazon Pay OneTime Checkout Order");
-            client.setOrderReferenceDetails(setOrderReferenceDetailsRequest);
+//            client.setOrderReferenceDetails(setOrderReferenceDetailsRequest);
+            final SetOrderReferenceDetailsResponseData setOrderReferenceDetailsResponseData = payClient.setOrderReferenceDetails(setOrderReferenceDetailsRequest);
+    System.out.println("<pre id='set'>" + setOrderReferenceDetailsResponseData.toXML().replace("<", "&lt;").replace(">", "&gt;") + "</pre>");
 
             ConfirmOrderReferenceRequest confirmOrderReferenceRequest = new ConfirmOrderReferenceRequest(orderReferenceId);
             client.confirmOrderReference(confirmOrderReferenceRequest);

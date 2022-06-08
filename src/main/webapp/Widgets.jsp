@@ -93,6 +93,7 @@
         <form action='AuthorizeandConfirm.jsp' id='orderform' method='post'>
             <input type="hidden" name="oro_id" id="oro_id" value="">
             <input type="hidden" name="consent_token" id="consent_token" value="">
+            <input type="hidden" name="checkout_session_id" id="checkout_session_id" value="">
             <button id="place-order" class="btn btn-lg btn-success">Place Order</button>
             <div id="ajax-loader" style="display:none;"><img src="images/ajax-loader.gif" /></div>
         <form>
@@ -102,7 +103,13 @@
                 amazon.Login.setClientId('amzn1.application-oa2-client.456a4c3b15d24aae96256d2f82afdd73');
             };
 
-            document.getElementById("consent_token").value = decodeURI(window.location.search.match(new RegExp('(?:[\?\&]access_token=)([^&]+)'))[1]);
+            // document.getElementById("consent_token").value = decodeURI(window.location.search.match(new RegExp('(?:[\?\&]access_token=)([^&]+)'))[1]);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            document.getElementById("checkout_session_id").value = urlParams.get('amazonCheckoutSessionId');
+
+            console.log('checkout session id = ' + document.getElementById("checkout_session_id").value);
+
         </script>
         <script type='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
 
